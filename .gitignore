@@ -1,0 +1,25 @@
+# VM / cloud images (large binaries; regenerate or download instead)
+*.qcow2
+*.img
+*.iso
+
+# SSH private keys — never commit
+id_rsa
+id_ecdsa
+id_ed25519
+*_id_rsa
+*_id_ed25519
+
+# Common secret material
+.env
+.env.*
+!.env.example
+*-sa.json
+*credentials*.json
+*.pem
+
+# Local toolchain
+node_modules/
+
+# Optional: keep stack config out of a public repo (contains gcp:project id)
+# quickstart/Pulumi.*.yaml

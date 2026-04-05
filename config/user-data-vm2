@@ -1,0 +1,10 @@
+#cloud-config
+users:
+  - name: ubuntu
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINSFyRldlJWIdtQLwj8xBlts6b14iIf568uYMhiWcBx8 romain.comtet@epitech.eu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+
+ssh_pwauth: false
+
