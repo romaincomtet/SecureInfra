@@ -1,10 +1,18 @@
 #cloud-config
+# Login: user "ubuntu". SSH uses your ed25519 key (no SSH password). Sudo: no password.
+# Serial console (virsh console): password below — change "chpasswd" for anything non-lab.
 users:
   - name: ubuntu
+    groups: [adm, sudo]
     ssh_authorized_keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINSFyRldlJWIdtQLwj8xBlts6b14iIf568uYMhiWcBx8 romain.comtet@epitech.eu
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
+    lock_passwd: false
 
 ssh_pwauth: false
 
+chpasswd:
+  list: |
+    ubuntu:ubuntu
+  expire: false

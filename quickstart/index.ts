@@ -38,6 +38,23 @@ if (!fs.existsSync(pubKeyResolved)) {
 const sshPublicKey = fs.readFileSync(pubKeyResolved, "utf8").trim();
 const sshKeysMetadata = `${sshUser}:${sshPublicKey}`;
 
+/** GCP Ubuntu images often give the metadata-created user sudo that asks for a password that was never set. */
+if (!/^[a-z_][a-z0-9_-]{0,31}$/i.test(sshUser)) {
+  throw new Error(
+    "sshUser must be a simple POSIX username (no spaces or special characters)"
+  );
+}
+const sudoersDropIn = "/etc/sudoers.d/90-pulumi-nopasswd";
+const startupScript = `#!/bin/bash
+set -euo pipefail
+FILE=${sudoersDropIn}
+LINE='${sshUser} ALL=(ALL) NOPASSWD:ALL'
+if [[ ! -f "$FILE" ]] || ! grep -qF "NOPASSWD:ALL" "$FILE" || ! grep -qF "${sshUser}" "$FILE"; then
+  echo "$LINE" > "$FILE"
+  chmod 0440 "$FILE"
+fi
+`;
+
 /** Ensures Compute Engine API is on (needs Service Usage API + IAM to enable services). */
 const computeApi = new gcp.projects.Service("compute-api", {
   project,
@@ -73,6 +90,7 @@ const vm = new gcp.compute.Instance(
     ],
     metadata: {
       "ssh-keys": sshKeysMetadata,
+      "startup-script": startupScript,
     },
     tags: ["pulumi-lab-vm"],
     labels: {
