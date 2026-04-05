@@ -87,3 +87,11 @@ sudo virt-install \
   --disk path="$VM_WORKDIR/vm2.qcow2",format=qcow2,bus=virtio \
   --disk path="$VM_WORKDIR/seed-vm2.iso",device=cdrom \
   --network network=default,model=virtio
+
+
+# how to connect to the vm ?
+# sudo virsh domifaddr vm1
+# sudo virsh domifaddr vm2
+
+# ssh -J romain@35.205.212.227 ubuntu@192.168.122.66
+# ssh -J romain@35.205.212.227 ubuntu@192.168.122.67
